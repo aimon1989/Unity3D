@@ -1,0 +1,42 @@
+using UnityEngine;
+using System.Collections;
+ 
+public class camera_Rotate : MonoBehaviour {
+	public float rotationSpeed; //η ταχυτητα που στριβει η καμερα
+	public float minAngle = 70.0f;   // Η μεγιστη τιμη που μπορει να στριψει ο παικτης
+	public float maxAngle = 290.0f;  // Η ελαχιστη τιμη που μπορει να στριψει ο παικτης
+	private float minAngleSecondCheck; // Η τιμη που θα ελεγχει για να μην buggarei το game
+	private float maxAngleSecondCheck; // Η τιμη που θα ελεγχει για να μην buggarei το game
+	// Use this for initialization
+	void Start () {
+		minAngleSecondCheck = minAngle + 10.0f;
+		maxAngleSecondCheck = maxAngle - 10.0f;
+		//respawnPlayer = GameObject.FindGameObjectsWithTag("Respawn");
+	}
+	
+	// Update is called once per frame
+	void Update () {
+ 
+		rotationSpeed = Mathf.Clamp(Input.GetAxis ("Mouse X"), -4.0f,4.0f);
+		
+		//Το πρωτο if ελεγχει για το αν ο χαρακτηρας μας κοιταει μεσα στα ορια που του εχουμε βαλει
+		if (transform.eulerAngles.y <= minAngle || transform.eulerAngles.y >= maxAngle) {
+			
+			transform.Rotate (0, rotationSpeed, 0);
+		}
+		//Αν ξεπερασει τα ορια μπενει μεσα σε αυτο το κομματι που ελεγχει τι θα κανει μετα.
+		//Αρχικα δεν αφηνει το ποντικι να δωσει αλλες τιμες και δευτερων κουναει την καμερα σιγα σιγα οστε να την φερει στα ορια παλι
+		else{
+			if(transform.eulerAngles.y > minAngle && transform.eulerAngles.y < minAngleSecondCheck) 
+			{
+				transform.Rotate (0, -0.5f, 0);
+				rotationSpeed = Input.GetAxis ("Mouse X")*0;
+			}
+			else if(transform.eulerAngles.y < maxAngle && transform.eulerAngles.y >maxAngleSecondCheck)
+			{
+				transform.Rotate (0, 0.5f, 0);
+				rotationSpeed = Input.GetAxis ("Mouse X")*0;
+			}
+		}
+	}
+}
