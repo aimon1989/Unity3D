@@ -1,0 +1,82 @@
+using UnityEngine;
+using System.Collections;
+
+public class buttonPress: MonoBehaviour {
+	public int counter;		  // Ο μετρητης για της φορες που παταει ο παικτης τα κουμπια
+	public int WinPoint = 10;		  // Ο αριθμος των κλικ που πρεπει αν κανει ο παικτης για να νικησει
+	public bool checkButton = true;     // Ελεγχει πιο κουμπι πατηθηκε
+	public bool checkTime = true;		  // Ελεγχει αν ο χρονος ειναι πανω απο το 0
+	public float resetTimer = 1.0f;		  // Εδω οριζουμε ποσο χρονο θα εχει ο παικτης για να πατησει τα κουμπια
+	public float moveTimer= 1.0f;		  // Ο μεγιστος χρονος που θα εχει να πατησει ο παικτης για να μην χασει
+	public bool gotAway= true;			// Ελεγχει αν ξεφυγε ο χρηστης
+
+
+	// Use this for initialization
+	void Start () {
+	}
+	
+	// Update is called once per frame
+	void Update () {
+
+
+		if (gotAway== false) {
+		} 
+		else if (gotAway== true)
+		{
+			moveTimer -= Time.deltaTime;
+		}
+
+		if (Input.GetKeyDown (KeyCode.UpArrow) && (checkButton == true)) 
+		{
+			if(moveTimer>0)
+			{
+			  counter++;
+		  }
+		  else
+		  {
+			counter=0;
+		  }
+
+			checkButton = false;
+			moveTimer=resetTimer;
+		} 
+		else if (Input.GetKeyDown (KeyCode.DownArrow) && (checkButton == false)) 
+		{
+			if(moveTimer>0){
+				counter++;
+			}
+			else
+			{
+				counter=0;
+			}
+
+			checkButton = true;
+			moveTimer=resetTimer;
+
+		}
+		if (moveTimer <= 0) 
+		{
+			counter = 0;
+			moveTimer=0;
+		}
+		if (counter >= WinPoint) 
+		{
+			Debug.Log ("You got away");
+			gotAway= false;
+		}
+	}
+	void OnGUI(){
+
+		GUI.Label (new Rect (100, 50, 400, 100), "<b><size=20><color=white>Time: " + moveTimer + "</color></size></b>");
+		GUI.Label (new Rect (100, 100, 400, 100), "<b><size=20><color=white>Count: " + counter + "</color></size></b>");
+
+
+		if (counter >= 10) 
+		{
+			GUI.Label (new Rect (Screen.width/2-100, Screen.height/2-50, 400, 100), "<b><size=30><color=red>You got away</color></size></b>");
+		
+		}
+
+	}
+
+}
